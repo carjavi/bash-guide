@@ -25,7 +25,13 @@ Arguments:
 ```
 ## To do autorun bash file
 ```
-chmod 755 donde-estoy.sh
+#sample
+chmod +x setup.sh
+./setup.sh
+
+-o-
+
+chmod 755 bash.sh
 ./bash.sh
 ```
 Si quieres omitir el ./ o si quieres ejecutar el script desde cualquier directorio en el sistema de archivos debes añadir el directorio que contiene el script al path del sistema:
