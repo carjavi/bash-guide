@@ -38,7 +38,7 @@ Si quieres omitir el ./ o si quieres ejecutar el script desde cualquier director
 
     export PATH=$PATH:.
 
-## INCRUSTAR PYTHON EN BASH
+##  Python into Bash
 ```
 #!/bin/bash
 
