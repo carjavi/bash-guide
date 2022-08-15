@@ -237,12 +237,94 @@ node /root/fracttal/DemoFracttal/DemoMarsol.js
 #node ./name.js
 ```
 
+## install.sh (service Daemon)
+```
+#!/usr/bin/env bash
+
+# Disabled UART2 for GPS
+fw_setenv bootdelay 0
+systemctl stop serial-getty@ttyMFD2.service
+systemctl mask serial-getty@ttyMFD2.service
+
+# Update linux system
+opkg update
+opkg upgrade
+
+# Install and Start Services
+cat > /etc/systemd/system/fracttal.service <<EOF
+
+[Unit]
+Description=Fracttal-OnBoard
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/node /home/root/app.js
+Restart=always
+SyslogIdentifier=node
+#User=root
+#Group=root
+Environment=NODE_ENV=production
+WorkingDirectory=/home/root
+
+[Install]
+WantedBy=multi-user.target
+
+EOF
+
+# Install node libs for app
+npm install serialport -g
+npm install bluetooth-serial-port -g
+npm install sprintf-js -g
+npm install mime -g
+
+# Download source code
+wget ota.fracttal.io/app.out
+mv app.out app.js.gz
+gzip -d app.js.gz
+chmod +x app.js
+
+# Start deamon code
+systemctl daemon-reload
+systemctl enable fracttal
+systemctl start fracttal
+
+systemctl disable wpa_supplicant; systemctl enable hostapd
+echo -e "@xxxxxxxx**++\n@xxxxxx**++" | passwd
+rm install.sh
+journalctl -f -u fracttal
+reboot  
+
+
+#systemctl status fracttal
+#test gzip -d app.min.js.gz ; mv app.min.js app.js ; systemctl restart fracttal ; journalctl -f -u fracttal
+#systemctl disable wpa_supplicant; systemctl enable hostapd
+#systemctl disable hostapd ; systemctl enable wpa_supplicant
+#systemctl disable fracttal
+#systemctl stop fracttal
+#serialport-term -b 115200 -p /dev/ttyMFD
+#rm Config.json; rm install.sh;rm tracker.log
+#nano /etc/hostapd/hostapd.conf
+```
+
 ## How download from github and run file Install.sh
 ```
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 ```
 
 ## Samples
+
+
+```
+#!/bin/bash
+cd /home/pi/max/node-ads1x15-master
+sudo node fir5.js
+```
+
+```
+#!/usr/bin/env bash
+ExecStart=node /home/pi/maquintel/node-ads1x15-master/fir5.js
+```
+
 ```
 #!/bin/bash
 
