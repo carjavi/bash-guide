@@ -1,6 +1,6 @@
 # bash-guide
 
-<p align="center"><img src="https://raw.githubusercontent.com/carjavi/bash-guide/master/img/bashlogo.png" height="100" alt=" " /></p>
+<p align="center"><img src="https://raw.githubusercontent.com/carjavi/bash-guide/master/img/bashlogo.png" height="250" alt=" " /></p>
 <br>
 <h1 align="center">Bash Guide</h1> 
 <h4 align="right">Aug 22</h4>
@@ -10,7 +10,6 @@
 <img src="https://img.shields.io/badge/Node%20-V18.7.0-green">
 <img src="https://img.shields.io/badge/Python%20-V3.9.2-orange">
 
-<br>
 
 ## Run file bash file
 ```
