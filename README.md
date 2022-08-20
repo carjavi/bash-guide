@@ -70,6 +70,8 @@ for i in range(100):
 main &
 ```
 
+    #!/usr/bin/env python
+
 ## Print Screen
 ```
 myvar="This is the value of my variable."
