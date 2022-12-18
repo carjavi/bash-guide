@@ -120,6 +120,9 @@ npm install mraa -g
 #!/bin/sh
 node OnGsm.js
 ```
+
+
+
 # Install and Start Services (systemd)
 ```
 #!/usr/bin/env bash
@@ -132,7 +135,7 @@ cat > /etc/systemd/system/autorun.service <<EOF
   After=network.target
 
   [Service]
-  ExecStart=/usr/bin/node /home/root/autorun.js
+  ExecStart=/usr/bin/node /home/pi/autorun.js
   Restart=always
   SyslogIdentifier=node
   #User=root
@@ -146,13 +149,20 @@ cat > /etc/systemd/system/autorun.service <<EOF
 EOF
 
 # Start deamon code
-systemctl daemon-reload
-systemctl enable autorun
-systemctl start autorun
+sudo systemctl daemon-reload
+sudo systemctl enable autorun.service
+sudo systemctl start autorun.service
 
-# para visualizar el estado de la app
-journalctl -f -u autorun
+# sentencias print() o mensajes de error seran capturadas por el sistema journalctl
+sudo journalctl -f -u autorun
 reboot  
+
+# Another Commands:
+# systemctl status autorun.service
+# sudo systemctl stop autorun.service
+# sudo systemctl start autorun.service
+# sudo systemctl disable autorun.service
+# sudo systemctl enable autorun.service
 
 ```
 
