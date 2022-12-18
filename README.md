@@ -38,6 +38,7 @@ Si quieres omitir el ./ o si quieres ejecutar el script desde cualquier director
 
     export PATH=$PATH:.
 
+
 ##  Python into Bash
 ```
 #!/bin/bash
@@ -112,7 +113,211 @@ npm install socket.io -g
 npm install express -g
 npm install mraa -g
 ```
-## Tipical Setup.sh
+
+
+## Run JS file
+```
+#!/bin/sh
+node OnGsm.js
+```
+# Install and Start Services (systemd)
+```
+#!/usr/bin/env bash
+
+# Install and Start Services
+cat > /etc/systemd/system/autorun.service <<EOF
+
+  [Unit]
+  Description= autorun-boot
+  After=network.target
+
+  [Service]
+  ExecStart=/usr/bin/node /home/root/autorun.js
+  Restart=always
+  SyslogIdentifier=node
+  #User=root
+  #Group=root
+  Environment=NODE_ENV=production
+  WorkingDirectory=/home/root
+
+  [Install]
+  WantedBy=multi-user.target
+
+EOF
+
+# Start deamon code
+systemctl daemon-reload
+systemctl enable autorun
+systemctl start autorun
+
+# para visualizar el estado de la app
+journalctl -f -u autorun
+reboot  
+
+```
+
+
+
+## Install and Start Services -sample
+```
+#!/usr/bin/env bash
+
+# Disabled UART2 for GPS
+fw_setenv bootdelay 0
+systemctl stop serial-getty@ttyMFD2.service
+systemctl mask serial-getty@ttyMFD2.service
+
+# Update linux system
+opkg update
+opkg upgrade
+
+# Install and Start Services
+cat > /etc/systemd/system/fracttal.service <<EOF
+
+[Unit]
+Description=Fracttal-OnBoard
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/node /home/root/app.js
+Restart=always
+SyslogIdentifier=node
+#User=root
+#Group=root
+Environment=NODE_ENV=production
+WorkingDirectory=/home/root
+
+[Install]
+WantedBy=multi-user.target
+
+EOF
+
+# Install node libs for app
+npm install serialport -g
+npm install bluetooth-serial-port -g
+npm install sprintf-js -g
+npm install mime -g
+
+# Download source code
+wget ota.fracttal.io/app.out
+mv app.out app.js.gz
+gzip -d app.js.gz
+chmod +x app.js
+
+# Start deamon code
+systemctl daemon-reload
+systemctl enable fracttal
+systemctl start fracttal
+
+systemctl disable wpa_supplicant; systemctl enable hostapd
+echo -e "@xxxxxxxx**++\n@xxxxxx**++" | passwd
+rm install.sh
+journalctl -f -u fracttal
+reboot  
+
+
+#systemctl status fracttal
+#test gzip -d app.min.js.gz ; mv app.min.js app.js ; systemctl restart fracttal ; journalctl -f -u fracttal
+#systemctl disable wpa_supplicant; systemctl enable hostapd
+#systemctl disable hostapd ; systemctl enable wpa_supplicant
+#systemctl disable fracttal
+#systemctl stop fracttal
+#serialport-term -b 115200 -p /dev/ttyMFD
+#rm Config.json; rm install.sh;rm tracker.log
+#nano /etc/hostapd/hostapd.conf
+```
+
+## How download from github and run file Install.sh
+```
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+```
+<br>
+
+# On RASPBERRY
+
+verificar el espacio disponible en la SD, un 1GB minimo. Get the number of free blocks and the block size in bytes, and calculate the value in GB
+```
+echo "Checking for available space."
+AVAILABLE_SPACE_GB=$(($(stat -f / --format="%a*%S/1024**3")))
+NECESSARY_SPACE_GB=1
+(( AVAILABLE_SPACE_GB < NECESSARY_SPACE_GB )) && (
+    echo "Not enough free space to install blueos, at least ${NECESSARY_SPACE_GB}GB required"
+    exit 1
+)
+```
+
+ Check if the script is running in a supported architecture
+```
+SUPPORTED_ARCHITECTURES=(
+  "armhf" # Pi, Pi2, Pi3, Pi4
+  "armv7" # Pi2, Pi3, Pi4
+  "armv7l" # Pi2, Pi3, Pi4 (Raspberry Pi OS Bullseye)
+  "aarch64" # Pi3, Pi4
+)
+ARCHITECTURE="$(uname -m)"
+[[ ! "${SUPPORTED_ARCHITECTURES[*]}" =~ $ARCHITECTURE ]] && (
+    echo "Invalid architecture: $ARCHITECTURE"
+    echo "Supported architectures: ${SUPPORTED_ARCHITECTURES[*]}"
+    exit 1
+)
+```
+
+Check if the script is running as root
+```
+[[ $EUID != 0 ]] && echo "Script must run as root."  && exit 1
+
+---------
+
+if [ "$(whoami)" != "root" ]; then
+	echo "Sorry, this script must be executed with sudo or as root"
+	exit 1
+fi
+
+```
+
+<br>
+
+## Ejemplo de como modificar un archivo de configuracion o de sistema desde un file.sh <br>
+SED es una herramienta de terminal cuyo uso principal es buscar y reemplazar un texto. Podemos hacer insertar, borrar, buscar y reemplazar.
+Dicho comando admite expresiones regulares que le permiten realizar una comparación de patronos complejos. Al utilizar SED, podemos editar archivos, incluso sin abrirlos, de manera individual o masiva. busque "Uso del comando Sed en Linux" para mas información.
+```
+echo "Disabling automatic Link-local configuration in dhcpd.conf."
+# delete line if it already exists
+sed -i '/noipv4ll/d' /etc/dhcpcd.conf
+# add noipv4ll
+sed -i '$ a noipv4ll' /etc/dhcpcd.conf
+
+-----------
+
+# add docker entry to rc.local
+sed -i "\%^exit 0%idocker start blueos-bootstrap" /etc/rc.local || echo "sed failed to add expand_fs entry in /etc/rc.local"
+
+----------
+
+# insert S1 above the first uncommented exit 0 line in the file
+sudo sed -i -e "\%$S1%d" \
+-e "0,/^[^#]*exit 0/s%%$S1\n&%" \
+/etc/rc.local
+
+----------
+
+# Enable RPi camera interface
+sudo sed -i '\%start_x=%d' /boot/config.txt
+sudo sed -i '\%gpu_mem=%d' /boot/config.txt
+sudo sed -i '$a start_x=1' /boot/config.txt
+sudo sed -i '$a gpu_mem=128' /boot/config.txt
+```
+
+## conteo regresivo para reiniciar
+```
+echo "System will reboot in 10 seconds."
+sleep 10 && reboot
+```
+
+<br>
+
+# Samples
+
 ```
 #!/bin/bash
 
@@ -205,13 +410,6 @@ fi
 sudo reboot now
 ```
 
-## Run JS file
-```
-#!/bin/sh
-node OnGsm.js
-```
-
-## Run commands console
 ```
 #! /bin/bash
 
@@ -226,94 +424,6 @@ killall wpa_supplicant
 wpa_supplicant -B -Dwext -i wlp2s0 -c ./wireless-wpa.conf -dd
 dhclient wlp2s0
 ```
-```
-#! / bin / bash 
-
-echo "Lectura de Sensores a Fracttal... "
-#node ~/fracttal/DemoFracttal/DemoMarsol.js
-#cd  ~/fracttal/DemoFracttal/
-#cd /fracttal/DemoFracttal/
-#./node DemoMarsol.js
-#node DemoMarsol.js
-node /root/fracttal/DemoFracttal/DemoMarsol.js
-#node ./name.js
-```
-
-## install.sh (service Daemon)
-```
-#!/usr/bin/env bash
-
-# Disabled UART2 for GPS
-fw_setenv bootdelay 0
-systemctl stop serial-getty@ttyMFD2.service
-systemctl mask serial-getty@ttyMFD2.service
-
-# Update linux system
-opkg update
-opkg upgrade
-
-# Install and Start Services
-cat > /etc/systemd/system/fracttal.service <<EOF
-
-[Unit]
-Description=Fracttal-OnBoard
-After=network.target
-
-[Service]
-ExecStart=/usr/bin/node /home/root/app.js
-Restart=always
-SyslogIdentifier=node
-#User=root
-#Group=root
-Environment=NODE_ENV=production
-WorkingDirectory=/home/root
-
-[Install]
-WantedBy=multi-user.target
-
-EOF
-
-# Install node libs for app
-npm install serialport -g
-npm install bluetooth-serial-port -g
-npm install sprintf-js -g
-npm install mime -g
-
-# Download source code
-wget ota.fracttal.io/app.out
-mv app.out app.js.gz
-gzip -d app.js.gz
-chmod +x app.js
-
-# Start deamon code
-systemctl daemon-reload
-systemctl enable fracttal
-systemctl start fracttal
-
-systemctl disable wpa_supplicant; systemctl enable hostapd
-echo -e "@xxxxxxxx**++\n@xxxxxx**++" | passwd
-rm install.sh
-journalctl -f -u fracttal
-reboot  
-
-
-#systemctl status fracttal
-#test gzip -d app.min.js.gz ; mv app.min.js app.js ; systemctl restart fracttal ; journalctl -f -u fracttal
-#systemctl disable wpa_supplicant; systemctl enable hostapd
-#systemctl disable hostapd ; systemctl enable wpa_supplicant
-#systemctl disable fracttal
-#systemctl stop fracttal
-#serialport-term -b 115200 -p /dev/ttyMFD
-#rm Config.json; rm install.sh;rm tracker.log
-#nano /etc/hostapd/hostapd.conf
-```
-
-## How download from github and run file Install.sh
-```
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-```
-
-## Samples
 
 
 ```
@@ -344,6 +454,8 @@ sh <path to script>/script.sh
 
 ( exec "path/to/script" )
 ```
+
+
 ```
 #!/bin/bash
 $SCRIPT_PATH="/path/to/script.sh"
@@ -372,7 +484,7 @@ echo $OUTPUT
 ```
 
 
-# Installer file
+
 
 ```
 #!/bin/bash
@@ -646,6 +758,19 @@ echo "--------------------"
 echo
 
 gphoto2 --version
+```
+
+```
+#! / bin / bash 
+
+echo "Lectura de Sensores a Fracttal... "
+#node ~/fracttal/DemoFracttal/DemoMarsol.js
+#cd  ~/fracttal/DemoFracttal/
+#cd /fracttal/DemoFracttal/
+#./node DemoMarsol.js
+#node DemoMarsol.js
+node /root/fracttal/DemoFracttal/DemoMarsol.js
+#node ./name.js
 ```
 
 
