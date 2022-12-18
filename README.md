@@ -102,16 +102,13 @@ exit 1
 #!/usr/bin/env bash
 
 # Update linux system
-opkg update
-opkg upgrade
+sudo apt-get update && sudo apt-get dist-upgrade -y
 
 # Install node libs for app
-npm install upgrade
-#npm install update
 npm install serialport -g
 npm install socket.io -g
 npm install express -g
-npm install mraa -g
+
 ```
 
 
