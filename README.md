@@ -162,7 +162,7 @@ reboot
 # sudo systemctl enable autorun.service
 
 ```
-
+<a href="https://instintodigital.net/" target="_blank"><img src="https://raw.githubusercontent.com/carjavi/bash-guide/master/img/download-red.png" height="100" alt="download"></a>
 
 
 ## Install and Start Services -sample
