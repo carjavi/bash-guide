@@ -163,7 +163,7 @@ reboot
 
 ```
 
-  <img  align="middle" width="32" height="32" src="https://raw.githubusercontent.com/carjavi/bash-guide/master/img/download-red.svg"> [autorun-install.sh](https://drive.google.com/file/d/1k8-iwqUfy_C1j123b0_U_gOU8FkMmDYv/view?usp=share_link)
+  <img  align="middle" width="32" height="32" src="https://raw.githubusercontent.com/carjavi/bash-guide/master/img/sh.svg"> [autorun-install.sh](https://drive.google.com/file/d/1k8-iwqUfy_C1j123b0_U_gOU8FkMmDYv/view?usp=share_link)
   
 <br>
 
