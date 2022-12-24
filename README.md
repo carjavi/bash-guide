@@ -76,7 +76,7 @@ sh flockonus-stack.sh
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/bin
 ```
 
-##  verificar ser root para continuar
+##  Verificar ser root para continuar
 ```
 if [ "$EUID" -ne 0 ]
 	then echo "Must be root"
@@ -84,7 +84,7 @@ if [ "$EUID" -ne 0 ]
 fi
 ```
 
-# investigar si lo agrega al inicio, final o borra todo para poner eso ------------
+# Investigar si lo agrega al inicio, final o borra todo para poner eso ------------
 ```
 cat > /etc/dnsmasq.conf <<EOF
 interface=wlan0
@@ -93,7 +93,7 @@ EOF
 ```
 
 # Modificar Archivos de Sistema con archivos *.sh
-## sed Find and Replace Syntax <br>
+## command sed Find and Replace Syntax <br>
 ```sed -i 's/<search regex>/<replacement>/g' <input file>```
 
 The command consists of the following:
@@ -122,7 +122,7 @@ sed 's/<search regex>/<replacement>/g' <input file> > <output file> // este remp
 ```
 
 
-## encadenar varios comandos (-e)
+## Encadenar varios comandos (-e)
 ```
 sed -e 's/usr/u/g' -e 's/bin/b/g'
 ```
