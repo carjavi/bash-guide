@@ -10,6 +10,7 @@
 <img src="https://img.shields.io/badge/Node%20-V18.7.0-green">
 <img src="https://img.shields.io/badge/Python%20-V3.9.2-orange">
 
+<br>
 
 ## Run file bash file
 ```
@@ -38,6 +39,114 @@ Si quieres omitir el ./ o si quieres ejecutar el script desde cualquier director
 
     export PATH=$PATH:.
 
+
+
+## Descargar y ejecutar
+```
+#!/bin/sh
+if [ ! -f "/tmp/flockonus-stack.sh" ]
+then
+    wget -O /tmp/flockonus-stack.sh http://dl.dropbox.com/u/11210438/flockonus-stack.sh // To download a file and save it under a specified name
+fi
+
+sh /tmp/flockonus-stack.sh
+```
+```
+!#/bin/bash
+#Change to temp directory
+cd /tmp
+
+#Download file using wget
+wget http://dl.dropbox.com/u/11210438/flockonus-stack.sh
+
+#Execute the file
+sh flockonus-stack.sh
+```
+
+## Path 
+```
+#!/usr/bin/env bash
+
+#!/bin/bash
+
+#!/bin/node
+
+#!/usr/bin/env node
+
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/bin
+```
+
+##  verificar ser root para continuar
+```
+if [ "$EUID" -ne 0 ]
+	then echo "Must be root"
+	exit
+fi
+```
+
+# investigar si lo agrega al inicio, final o borra todo para poner eso ------------
+```
+cat > /etc/dnsmasq.conf <<EOF
+interface=wlan0
+dhcp-range=10.0.0.2,10.0.0.5,255.255.255.0,12h
+EOF
+```
+
+# Modificar Archivos de Sistema con archivos *.sh
+## sed Find and Replace Syntax <br>
+```sed -i 's/<search regex>/<replacement>/g' <input file>```
+
+The command consists of the following:
+
+-i tells the sed command to write the results to a file instead of standard output.
+s indicates the substitute command.
+/ is the most common delimiter character. The command also accepts other characters as delimiters, which is useful when the string contains forward slashes.
+```<search regex>``` is the string or regular expression search parameter.
+```<replacement>``` is the replacement text.
+g is the global replacement flag, which replaces all occurrences of a string instead of just the first.
+```<input file>``` is the file where the search and replace happens.
+
+## Replace Matched String
+To replace the first found instance of the word bar with linux in every line of a file, run:
+```
+sed -i 's/bar/linux/' example.txt // busca la primera palabra bar y la cambia por linux
+sed -i 's/bar/linux/g' example.txt // busca todas las palabra bar y pone linux
+sed -i 's/bar/linux/gI' example.txt // busca todas las palabra bar y pone linux sin importar si el nombre bar es minuscula mayuscula
+sed -i 's/[A-Z]/5/g' example.txt // busca cada letra mayuscula y lo cambia por 5
+```
+
+## Create a Backup
+```
+sed -i.bak 's/foo/FOO/g' example.txt // crea una copia de seguridad antes de sobrescribir el existente. cambio foo por FOO en el archivo nuevo
+sed 's/<search regex>/<replacement>/g' <input file> > <output file> // este remplaza el texto y crea un archivo nuevo
+```
+
+
+## encadenar varios comandos (-e)
+```
+sed -e 's/usr/u/g' -e 's/bin/b/g'
+```
+
+## Usar y reemplazar texto con SED cuando los patrones que estamos buscando contienen el carácter /
+```
+ejem: cat /etc/shells | sed 's/\/usr/(u/g'
+```
+
+## Insertar texto al final de una línea
+```
+sed -i 's/$/. cierro la cita/' sedexamples // $ es la expresión regular que indica al final de la línea.
+```
+
+mas info: https://phoenixnap.com/kb/sed-replace
+        https://geekland.eu/uso-del-comando-sed-en-linux-y-unix-con-ejemplos/   
+
+
+probar:
+```
+sed -i -- 's/#DAEMON_CONF=""/DAEMON_CONF="\/etc\/hostapd\/hostapd.conf"/g' /etc/default/hostapd
+// le quita el comentario a una linea y le cambia el nombre al archivo
+sed -i -- 's/    wpa-conf \/etc\/wpa_supplicant\/wpa_supplicant.conf//g' /etc/network/interfaces
+```
 
 ##  Python into Bash
 ```
