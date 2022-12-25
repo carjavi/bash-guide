@@ -973,8 +973,8 @@ echo "All done! Please reboot"
 ```
 
 
-# carjavi install *.sh
-```Readonly command``` => Use the readonly command to make variables and functions readonly i.e. you cannot change the value of variables.
+# carjavi install *.sh (ascii)
+```Readonly command``` => Use the readonly command to make variables and functions readonly i.e. you cannot change the value of variables. <br>
 ```echo -e``` => The -e option allows you to change the format of the output while using echo
 
 ```
