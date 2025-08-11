@@ -15,15 +15,23 @@
 
 <br>
 
-# Evitar Errores por salto de linea en los archivos planos de texto
+# Evitar Errores por salto de linea en los archivos planos de texto (Cuando se trabaja en Windows & Linux)
 ```LF``` (Line Feed) es el final de línea usado en Linux/macOS.
 
 ```CRLF``` (Carriage Return + Line Feed) es el usado en Windows.
 
 # Script que convierte los saltos de linea CRLF a LF
+Lo hace en directorio donde se corra. funciona con los siguiente archivos ```txt|md|py|js|html|css|json|xml|yml|yaml|sh|bat|c|cpp|h|java```
 ```bash
-
+sudo su -c 'curl -fsSL https://raw.githubusercontent.com/carjavi/raspberry-pi-code/main/docker-RPi/install_docker_portainer.sh| bash' 
 ```
+> [!IMPORTANT]
+> No corre en ```PowerShell``` de  Windows sino en ```Git Bash``` en Windows
+
+> [!WARNING]
+>Evalua si no va alterar algun archivo de la lista de extesion que no desees modificar
+
+<br>
 
 ## Run file bash file
 ```bash
