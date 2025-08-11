@@ -97,6 +97,9 @@ chmod +x git-normalize.sh && ./git-normalize.sh
 
 <br>
 
+
+# Codes snippet collection 
+
 ## Run file bash file
 ```bash
 bash [options] [file]
@@ -112,22 +115,16 @@ Arguments:
 ## To do autorun bash file
 ```bash
 #sample
-chmod +x <file name>
-sudo ./<file name>
+chmod +x <file name> && sudo ./<file name>
 
 -o-
 
-chmod 755 bash.sh
-bash ./<file name>
+chmod 755 <file name> && bash ./<file name>
 ```
 Si quieres omitir el ./ o si quieres ejecutar el script desde cualquier directorio en el sistema de archivos debes añadir el directorio que contiene el script al path del sistema:
 ```bash
 export PATH=$PATH:.
 ```
-
-<br>
-
-# Codes snippet collection 
 
 ## Salir si hay un error
 ```bash
