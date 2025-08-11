@@ -19,3 +19,10 @@ while IFS= read -r -d '' file; do
 done
 
 echo "Conversión completada."
+
+# Auto-eliminar el script después de terminar
+SCRIPT_PATH="$(realpath "$0")"
+if [[ "$(basename "$SCRIPT_PATH")" == "convert_crlf_to_lf.sh" ]]; then
+  echo "Eliminando script: $SCRIPT_PATH"
+  rm "$SCRIPT_PATH"
+fi

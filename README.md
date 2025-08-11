@@ -22,9 +22,11 @@
 
 # Script que convierte los saltos de linea CRLF a LF
 Lo hace en directorio donde se corra. funciona con los siguiente archivos ```txt|md|py|js|html|css|json|xml|yml|yaml|sh|bat|c|cpp|h|java```
+
 ```bash
-sudo su -c 'curl -fsSL https://raw.githubusercontent.com/carjavi/raspberry-pi-code/main/docker-RPi/install_docker_portainer.sh| bash' 
+sudo su -c 'curl -fsSL  https://raw.githubusercontent.com/carjavi/bash-guide/main/convert_crlf_to_lf.sh | bash'                    
 ```
+
 > [!IMPORTANT]
 > No corre en ```PowerShell``` de  Windows sino en ```Git Bash``` en Windows
 
