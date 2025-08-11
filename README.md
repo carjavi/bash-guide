@@ -21,10 +21,20 @@
 ```CRLF``` (Carriage Return + Line Feed) es el usado en Windows.
 
 # Script que convierte los saltos de linea CRLF a LF
-Lo hace en directorio donde se corra. funciona con los siguiente archivos ```txt|md|py|js|html|css|json|xml|yml|yaml|sh|bat|c|cpp|h|java```
+Lo hace en directorio donde este y el mismo se borra despues de ejecutarse. funciona con los siguiente archivos: <br>
+ ```.txt|.md|.py|.js|.html|.css|.json|.xml|.yml|.yaml|.sh|.bat|.c|.cpp|.h|.java|.php|.rb|.go|.rs|.ts|.jsx|.tsx|.vue|.sql|.conf|.cfg|.ini|.log```
 
+Desde Linux:
 ```bash
 sudo su -c 'curl -fsSL  https://raw.githubusercontent.com/carjavi/bash-guide/main/convert_crlf_to_lf.sh | bash'                    
+```
+
+Desde Git Bash Windows:
+```bash
+curl -O https://raw.githubusercontent.com/carjavi/bash-guide/main/convert_crlf_to_lf.sh 
+```
+```bash
+chmod +x convert_crlf_to_lf.sh && ./convert_crlf_to_lf.sh
 ```
 
 > [!IMPORTANT]

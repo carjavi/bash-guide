@@ -3,26 +3,49 @@ set -euo pipefail
 
 TARGET_DIR="${1:-.}"
 
-echo "Convertiendo archivos de CRLF a LF en '$TARGET_DIR'..."
+echo "Convirtiendo CRLF -> LF en '$TARGET_DIR'..."
 
-# Extensiones de texto comunes (ajusta según necesites)
-TEXT_EXTENSIONS="\.(txt|md|py|js|html|css|json|xml|yml|yaml|sh|bat|c|cpp|h|java)$"
-
-# Buscar solo archivos de texto que contengan CRLF
-find "$TARGET_DIR" -type f -regex ".*$TEXT_EXTENSIONS" -print0 | \
+find "$TARGET_DIR" -type f \( \
+  -iname "*.txt" -o \
+  -iname "*.md" -o \
+  -iname "*.py" -o \
+  -iname "*.js" -o \
+  -iname "*.html" -o \
+  -iname "*.css" -o \
+  -iname "*.json" -o \
+  -iname "*.xml" -o \
+  -iname "*.yml" -o \
+  -iname "*.yaml" -o \
+  -iname "*.sh" -o \
+  -iname "*.bat" -o \
+  -iname "*.c" -o \
+  -iname "*.cpp" -o \
+  -iname "*.h" -o \
+  -iname "*.java" -o \
+  -iname "*.php" -o \
+  -iname "*.rb" -o \
+  -iname "*.go" -o \
+  -iname "*.rs" -o \
+  -iname "*.ts" -o \
+  -iname "*.jsx" -o \
+  -iname "*.tsx" -o \
+  -iname "*.vue" -o \
+  -iname "*.sql" -o \
+  -iname "*.conf" -o \
+  -iname "*.cfg" -o \
+  -iname "*.ini" -o \
+  -iname "*.log" \
+\) -print0 | \
 while IFS= read -r -d '' file; do
-  # Verificar si tiene CRLF antes de procesar
-  if grep -q $'\r' "$file" 2>/dev/null; then
-    sed -i 's/\r$//' "$file"
-    echo "Procesado: $file"
-  fi
+  sed -i 's/\r$//' "$file"
+  echo "Procesado: $file"
 done
 
 echo "Conversión completada."
 
 # Auto-eliminar el script después de terminar
 SCRIPT_PATH="$(realpath "$0")"
-if [[ "$(basename "$SCRIPT_PATH")" == "convert_crlf_to_lf.sh" ]]; then
-  echo "Eliminando script: $SCRIPT_PATH"
+SCRIPT_NAME="$(basename "$SCRIPT_PATH")"
+if [[ "$SCRIPT_NAME" == "convert_crlf_to_lf.sh" || "$SCRIPT_NAME" == "convert_crlf_to_lf_robust.sh" ]]; then
   rm "$SCRIPT_PATH"
 fi
