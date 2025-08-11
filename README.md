@@ -20,7 +20,7 @@
 
 ```CRLF``` (Carriage Return + Line Feed) es el usado en Windows.
 
-# Script que convierte los saltos de linea CRLF a LF
+## Script que convierte los saltos de linea CRLF a LF
 Lo hace en directorio donde este y el mismo se borra despues de ejecutarse. funciona con los siguiente archivos: <br>
  ```.txt|.md|.py|.js|.html|.css|.json|.xml|.yml|.yaml|.sh|.bat|.c|.cpp|.h|.java|.php|.rb|.go|.rs|.ts|.jsx|.tsx|.vue|.sql|.conf|.cfg|.ini|.log```
 
@@ -42,6 +42,58 @@ chmod +x convert_crlf_to_lf.sh && ./convert_crlf_to_lf.sh
 
 > [!WARNING]
 >Evalua si no va alterar algun archivo de la lista de extesion que no desees modificar
+
+
+## Comprobar si un archivo tiene salto de linea CRLF 
+***En Linux / Git Bash en Windows:***
+```bash
+file <file name>
+```
+Si tiene salto de linea CRLF dira "with CRLF line terminators" y si no tiene no dira nada
+
+
+***En PowerShell (Windows):***
+```bash
+(Get-Content -Raw <file name> ) -match "`r`n"
+```
+Devuelve True si encuentra CRLF, False si no.
+
+## Correguir en VS Code (hay varias formas):
+* Por archivo (rápido): abre el archivo, clic en el indicador de fin de línea en la barra de estado (abajo a la derecha, dice CRLF o LF) → elige “LF” → guarda.
+* Con la paleta: Ctrl+Shift+P → ```Change End of Line Sequence``` → “LF” → guarda.
+* Por defecto para nuevos archivos: Settings → busca “end of line” → “Files: Eol” → selecciona “\n”.
+
+
+## Correguir por comandos de consola 
+***Linux / Git Bash en Windows***
+```bash
+sed -i 's/\r$//' <file name>
+```
+
+***Correguir usando dos2unix de linux (requiere instalar dos2unix)***
+```bash
+sudo apt install dos2unix -y
+dos2unix <file name> 
+```
+
+## Configurar Git para que no cambia final de linea en CRLF cuando se hace un push al repositorio remoto.
+Normaliza finales de línea a LF en el repo actual y configura Git para no introducir CRLF. ejecutar desde la raíz del repositorio. Basicamente realiza automáticamente los pasos para forzar LF, renormalizar, commitear, configurar Git para no introducir CRLF y hacer push.
+Desde Git Bash Windows:
+
+```bash
+curl -O https://raw.githubusercontent.com/carjavi/bash-guide/main/git-normalize.sh
+```
+
+Ejecutar: 
+```bash
+chmod +x git-normalize.sh && ./git-normalize.sh
+```
+
+* El script crea/actualiza .gitattributes con “* text eol=lf”, renormaliza y commitea solo si hay cambios.
+* Si ya tenías .gitattributes con otras reglas (por ejemplo LFS), esta versión lo sobrescribe con “* text eol=lf”.
+* Funciona tanto en Linux como en Git Bash Windows.
+* El archivo se auto-elimina al finalizar.
+* Intenta hacer push. Si no hay upstream configurado, probará con el primer remoto (p. ej., origin). Si no hay remoto, te indicará cómo proceder.
 
 <br>
 
@@ -76,6 +128,14 @@ export PATH=$PATH:.
 <br>
 
 # Codes snippet collection 
+
+## Salir si hay un error
+```bash
+# Al inicio del codigo
+# Exit if something goes wrong
+set -e
+```
+
 
 ## Descargar y ejecutar
 ```bash
