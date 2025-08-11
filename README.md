@@ -1,19 +1,32 @@
-# bash-guide
 
 <p align="center"><img src="https://raw.githubusercontent.com/carjavi/bash-guide/master/img/bashlogo.png" height="250" alt=" " /></p>
 <br>
 <h1 align="center">Bash Guide</h1> 
 <h4 align="right">Aug 22</h4>
 
-<img src="https://img.shields.io/badge/OS%20-Raspbian%20GNU%2FLinux%2011%20(bulleye)-yellowgreen">
-<img src="https://img.shields.io/badge/Hardware-Raspberry%20ver%204-red">
-<img src="https://img.shields.io/badge/Node%20-V18.7.0-green">
-<img src="https://img.shields.io/badge/Python%20-V3.9.2-orange">
+<img src="https://img.shields.io/badge/OS-Linux%20GNU-yellowgreen">
 
 <br>
 
-## Run file bash file
+# Table of contents
+- [Table of contents](#Table-of-contents)
+- [Evitar Errores por salto de linea en los archivos planos de texto](#Evitar-Errores-por-salto-de-linea-en-los-archivos-planos-de-texto)
+- [Script que convierte los saltos de linea CRLF a LF](#Script-que-convierte-los-saltos-de-linea-CRLF-a-LF)
+
+<br>
+
+# Evitar Errores por salto de linea en los archivos planos de texto
+```LF``` (Line Feed) es el final de línea usado en Linux/macOS.
+
+```CRLF``` (Carriage Return + Line Feed) es el usado en Windows.
+
+# Script que convierte los saltos de linea CRLF a LF
+```bash
+
 ```
+
+## Run file bash file
+```bash
 bash [options] [file]
 bash file.sh
 
@@ -25,90 +38,66 @@ Arguments:
 --help   Display a usage message and exit.
 ```
 ## To do autorun bash file
-```
+```bash
 #sample
-chmod +x setup.sh
-./setup.sh
+chmod +x <file name>
+sudo ./<file name>
 
 -o-
 
 chmod 755 bash.sh
-./bash.sh
+bash ./<file name>
 ```
 Si quieres omitir el ./ o si quieres ejecutar el script desde cualquier directorio en el sistema de archivos debes añadir el directorio que contiene el script al path del sistema:
+```bash
+export PATH=$PATH:.
+```
 
-    export PATH=$PATH:.
+<br>
 
-
+# Codes snippet collection 
 
 ## Descargar y ejecutar
-```
-#!/bin/sh
-if [ ! -f "/tmp/flockonus-stack.sh" ]
-then
-    wget -O /tmp/flockonus-stack.sh http://dl.dropbox.com/u/11210438/flockonus-stack.sh // To download a file and save it under a specified name
-fi
+```bash
+# sample
+sudo su -c 'curl -fsSL https://raw.githubusercontent.com/carjavi/raspberry-pi-code/main/docker-RPi/install_docker_portainer.sh| bash' 
 
-sh /tmp/flockonus-stack.sh
-```
-```
-!#/bin/bash
-#Change to temp directory
-cd /tmp
-
-#Download file using wget
-wget http://dl.dropbox.com/u/11210438/flockonus-stack.sh
-
-#Execute the file
-sh flockonus-stack.sh
 ```
 
-## Path 
-```
-#!/usr/bin/env bash
-
-#!/bin/bash
-
-#!/bin/node
-
-#!/usr/bin/env node
-
-PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/bin
-```
+<br>
 
 ##  Verificar ser root para continuar
-```
+```bash
 if [ "$EUID" -ne 0 ]
 	then echo "Must be root"
 	exit
 fi
 ```
 
-# Investigar si lo agrega al inicio, final o borra todo para poner eso ------------
-```
+```bash
 cat > /etc/dnsmasq.conf <<EOF
 interface=wlan0
 dhcp-range=10.0.0.2,10.0.0.5,255.255.255.0,12h
 EOF
 ```
 
-# Modificar Archivos de Sistema con archivos *.sh
-## command sed Find and Replace Syntax <br>
+## Modificar Archivos de Sistema con archivos *.sh
+### command sed Find and Replace Syntax <br>
 ```sed -i 's/<search regex>/<replacement>/g' <input file>```
 
 The command consists of the following:
 
--i tells the sed command to write the results to a file instead of standard output.
-s indicates the substitute command.
-/ is the most common delimiter character. The command also accepts other characters as delimiters, which is useful when the string contains forward slashes.
-```<search regex>``` is the string or regular expression search parameter.
-```<replacement>``` is the replacement text.
-g is the global replacement flag, which replaces all occurrences of a string instead of just the first.
-```<input file>``` is the file where the search and replace happens.
+```-i``` tells the sed command to write the results to a file instead of standard output.<br>
+```s``` indicates the substitute command.<br>
+```/``` is the most common delimiter character. The command also accepts other characters as delimiters, which is useful when the string contains forward slashes.<br>
+```<search regex>``` is the string or regular expression search parameter.<br>
+```<replacement>``` is the replacement text.<br>
+```g ``` is the global replacement flag, which replaces all occurrences of a string instead of just the first.<br>
+```<input file>``` is the file where the search and replace happens. <br>
 
 ## Replace Matched String
 To replace the first found instance of the word bar with linux in every line of a file, run:
-```
+```bash
 sed -i 's/bar/linux/' example.txt // busca la primera palabra bar y la cambia por linux
 sed -i 's/bar/linux/g' example.txt // busca todas las palabra bar y pone linux
 sed -i 's/bar/linux/gI' example.txt // busca todas las palabra bar y pone linux sin importar si el nombre bar es minuscula mayuscula
@@ -116,40 +105,31 @@ sed -i 's/[A-Z]/5/g' example.txt // busca cada letra mayuscula y lo cambia por 5
 ```
 
 ## Create a Backup
-```
+```bash
 sed -i.bak 's/foo/FOO/g' example.txt // crea una copia de seguridad antes de sobrescribir el existente. cambio foo por FOO en el archivo nuevo
 sed 's/<search regex>/<replacement>/g' <input file> > <output file> // este remplaza el texto y crea un archivo nuevo
 ```
 
 
 ## Encadenar varios comandos (-e)
-```
+```bash
 sed -e 's/usr/u/g' -e 's/bin/b/g'
 ```
 
 ## Usar y reemplazar texto con SED cuando los patrones que estamos buscando contienen el carácter /
-```
-ejem: cat /etc/shells | sed 's/\/usr/(u/g'
+```bash
+#ejem: 
+cat /etc/shells | sed 's/\/usr/(u/g'
 ```
 
 ## Insertar texto al final de una línea
-```
+```bash
 sed -i 's/$/. cierro la cita/' sedexamples // $ es la expresión regular que indica al final de la línea.
 ```
 
-mas info: https://phoenixnap.com/kb/sed-replace
-        https://geekland.eu/uso-del-comando-sed-en-linux-y-unix-con-ejemplos/   
-
-
-probar:
-```
-sed -i -- 's/#DAEMON_CONF=""/DAEMON_CONF="\/etc\/hostapd\/hostapd.conf"/g' /etc/default/hostapd
-// le quita el comentario a una linea y le cambia el nombre al archivo
-sed -i -- 's/    wpa-conf \/etc\/wpa_supplicant\/wpa_supplicant.conf//g' /etc/network/interfaces
-```
 
 ##  Python into Bash
-```
+```bash
 #!/bin/bash
 
 python3 -c "
@@ -163,7 +143,7 @@ while i < 10:
 El resultado es el siguiente: 0 1 2 3 4 5 6 7 8 9
 
 ## Python y Bash
-```
+```bash
 #!/bin/bash
 
 function main { python -c "
@@ -180,21 +160,9 @@ for i in range(100):
 main &
 ```
 
-    #!/usr/bin/env python
-
-## Print Screen
-```
-myvar="This is the value of my variable."
-echo $myvar
-
-myvar="12";echo $(( $myvar + 3 ))
-#print 15
-
-
-```
 
 ## Run bash file from Python 
-```
+```bash
 import subprocess
 exit_code = subprocess.call('./practice.sh')
 print(exit_code)
@@ -207,7 +175,7 @@ exit 1
 ```
 
 ## Upgrade & Install 
-```
+```bash
 #!/usr/bin/env bash
 
 # Update linux system
@@ -221,16 +189,8 @@ npm install express -g
 ```
 
 
-## Run JS file
-```
-#!/bin/sh
-node OnGsm.js
-```
-
-
-
 # Install and Start Services (systemd)
-```
+```bash
 #!/usr/bin/env bash
 
 # Install and Start Services
@@ -272,14 +232,11 @@ reboot
 
 ```
 
-  <img  align="middle" width="32" height="32" src="https://raw.githubusercontent.com/carjavi/bash-guide/master/img/sh.svg"> [autorun-install.sh](https://drive.google.com/file/d/1k8-iwqUfy_C1j123b0_U_gOU8FkMmDYv/view?usp=share_link)
-  
 <br>
 
 
-
 ## Install and Start Services -sample
-```
+```bash
 #!/usr/bin/env bash
 
 # Disabled UART2 for GPS
@@ -347,16 +304,13 @@ reboot
 #nano /etc/hostapd/hostapd.conf
 ```
 
-## How download from github and run file Install.sh
-```
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-```
+
 <br>
 
 # On RASPBERRY
 
 verificar el espacio disponible en la SD, un 1GB minimo. Get the number of free blocks and the block size in bytes, and calculate the value in GB
-```
+```bash
 echo "Checking for available space."
 AVAILABLE_SPACE_GB=$(($(stat -f / --format="%a*%S/1024**3")))
 NECESSARY_SPACE_GB=1
@@ -366,8 +320,8 @@ NECESSARY_SPACE_GB=1
 )
 ```
 
- Check if the script is running in a supported architecture
-```
+Check if the script is running in a supported architecture
+```bash
 SUPPORTED_ARCHITECTURES=(
   "armhf" # Pi, Pi2, Pi3, Pi4
   "armv7" # Pi2, Pi3, Pi4
@@ -383,7 +337,7 @@ ARCHITECTURE="$(uname -m)"
 ```
 
 Check if the script is running as root
-```
+```bash
 [[ $EUID != 0 ]] && echo "Script must run as root."  && exit 1
 
 ---------
@@ -397,29 +351,24 @@ fi
 
 <br>
 
-## Ejemplo de como modificar un archivo de configuracion o de sistema desde un file.sh <br>
+Ejemplo de como modificar un archivo de configuracion o de sistema desde un file.sh <br>
 SED es una herramienta de terminal cuyo uso principal es buscar y reemplazar un texto. Podemos hacer insertar, borrar, buscar y reemplazar.
 Dicho comando admite expresiones regulares que le permiten realizar una comparación de patronos complejos. Al utilizar SED, podemos editar archivos, incluso sin abrirlos, de manera individual o masiva. busque "Uso del comando Sed en Linux" para mas información.
-```
+```bash
 echo "Disabling automatic Link-local configuration in dhcpd.conf."
 # delete line if it already exists
 sed -i '/noipv4ll/d' /etc/dhcpcd.conf
 # add noipv4ll
 sed -i '$ a noipv4ll' /etc/dhcpcd.conf
 
------------
-
 # add docker entry to rc.local
 sed -i "\%^exit 0%idocker start blueos-bootstrap" /etc/rc.local || echo "sed failed to add expand_fs entry in /etc/rc.local"
 
-----------
 
 # insert S1 above the first uncommented exit 0 line in the file
 sudo sed -i -e "\%$S1%d" \
 -e "0,/^[^#]*exit 0/s%%$S1\n&%" \
 /etc/rc.local
-
-----------
 
 # Enable RPi camera interface
 sudo sed -i '\%start_x=%d' /boot/config.txt
@@ -429,7 +378,7 @@ sudo sed -i '$a gpu_mem=128' /boot/config.txt
 ```
 
 ## conteo regresivo para reiniciar
-```
+```bash
 echo "System will reboot in 10 seconds."
 sleep 10 && reboot
 ```
@@ -438,7 +387,8 @@ sleep 10 && reboot
 
 # Samples
 
-```
+## Blue Robotics
+```bash
 #!/bin/bash
 
 # RPi2 setup script for use as companion computer. This script is simplified for use with
@@ -530,83 +480,12 @@ fi
 sudo reboot now
 ```
 
-```
-#! /bin/bash
 
-# Configuracion para el Intel NUC
-#wlp2s0 es la tarjeta de RED la configurcion de la red y password esta en Wireless.conf
-
-ifconfig wlp2s0 down
-dhclient wlp2s0 -r
-ifconfig wlp2s0 up
-iwconfig wlp2s0 mode Managed
-killall wpa_supplicant
-wpa_supplicant -B -Dwext -i wlp2s0 -c ./wireless-wpa.conf -dd
-dhclient wlp2s0
-```
+<br>
 
 
-```
-#!/bin/bash
-cd /home/pi/max/node-ads1x15-master
-sudo node fir5.js
-```
-
-```
-#!/usr/bin/env bash
-ExecStart=node /home/pi/maquintel/node-ads1x15-master/fir5.js
-```
-
-```
-#!/bin/bash
-
-reldir=`dirname $0`
-cd $reldir
-directory=`pwd`
-
-echo "Directory is $directory"
-
-echo "This script is about to run another script."
-sh ./script.sh
-echo "This script has just run another script."
-
-sh <path to script>/script.sh
-
-( exec "path/to/script" )
-```
-
-
-```
-#!/bin/bash
-$SCRIPT_PATH="/path/to/script.sh"
-
-# Here you execute your script
-"$SCRIPT_PATH"
-
-# or
-. "$SCRIPT_PATH"
-# or
-source "$SCRIPT_PATH"
-# or
-bash "$SCRIPT_PATH"
-# or
-eval '"$SCRIPT_PATH"'
-# or
-OUTPUT=$("$SCRIPT_PATH")
-echo $OUTPUT
-# or
-OUTPUT=`"$SCRIPT_PATH"`
-echo $OUTPUT
-# or
-("$SCRIPT_PATH")
-# or
-(exec "$SCRIPT_PATH")
-```
-
-
-
-
-```
+## Gphoto2 compiler and installer script
+```bash
 #!/bin/bash
 
 # Gphoto2 compiler and installer script
@@ -880,22 +759,11 @@ echo
 gphoto2 --version
 ```
 
-```
-#! / bin / bash 
 
-echo "Lectura de Sensores a Fracttal... "
-#node ~/fracttal/DemoFracttal/DemoMarsol.js
-#cd  ~/fracttal/DemoFracttal/
-#cd /fracttal/DemoFracttal/
-#./node DemoMarsol.js
-#node DemoMarsol.js
-node /root/fracttal/DemoFracttal/DemoMarsol.js
-#node ./name.js
-```
 <br>
 
-### rPi3-access-point-setup.sh
-```
+## rPi3-access-point-setup.sh
+```bash
 #!/bin/bash
 #
 # This version uses September 2017 august stretch image, please use this image
@@ -977,7 +845,7 @@ echo "All done! Please reboot"
 ```Readonly command``` => Use the readonly command to make variables and functions readonly i.e. you cannot change the value of variables. <br>
 ```echo -e``` => The -e option allows you to change the format of the output while using echo
 
-```
+```bash
 #!/bin/bash
 
 # Define colors
@@ -987,8 +855,6 @@ readonly ANSI_YELLOW="\033[0;33m"
 readonly ANSI_RASPBERRY="\033[0;35m"
 readonly ANSI_ERROR="\033[1;37;41m"
 readonly ANSI_RESET="\033[m"
-readonly RASPAP_LATEST="2.0"
-#este da error
 readonly ANSI_RESET="error"
 
 
@@ -1016,8 +882,9 @@ echo -e "${ANSI_GREEN}RaspAP Install: $1${ANSI_RESET}"
 
 echo "All done! Please reboot"
 ```
+<br>
 
-```
+```bash
 #!/bin/bash
 
 # Define colors
@@ -1027,8 +894,6 @@ readonly ANSI_YELLOW="\033[0;33m"
 readonly ANSI_RASPBERRY="\033[0;35m"
 readonly ANSI_ERROR="\033[1;37;41m"
 readonly ANSI_RESET="\033[m"
-readonly RASPAP_LATEST="2.0"
-#este da error
 readonly ANSI_RESET="error"
 
 
@@ -1049,9 +914,10 @@ echo -e "\033[1;32m*************************************************************
 
 
 
-
+<br>
 
 <br>
+
 ---
 Copyright &copy; 2022 [carjavi](https://github.com/carjavi). <br>
 ```www.instintodigital.net``` <br>
